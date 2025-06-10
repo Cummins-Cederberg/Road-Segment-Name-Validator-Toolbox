@@ -1,49 +1,41 @@
-# Road-Segment-Name-Validator-Toolbox
-ArcGIS Pro toolbox for validating and updating road segment names based on intersecting street names. Designed to assist in street network data by detecting mismatches and correcting start/end intersection names using spatial relationships.
+# 🛣️ Road Name Checking Toolbox
 
-## 🛣️ Road Segment Name Validation Toolbox
-A custom ArcGIS Python toolbox (.pyt) that performs automation on road segment names by checking the consistency of intersecting road names at the start and end points of each road segment.
+A custom ArcGIS Python Toolbox for validating and updating road segment names based on spatial intersections. This tool compares road name fields (`Name_1` and `Name_12`) against the intersecting road names to correct potential discrepancies at the start and end points of each road segment.
 
-## 🔍 What It Does
-This tool:
+---
 
-Takes a polyline feature class of road segments.
+## 📦 Features
 
-Compares each road segment's name with the names of intersecting roads at its start and end points.
+- Automatically updates `Name_1` and `Name_12` fields if the intersecting road names suggest better values.
+- Uses spatial logic to inspect road connectivity and naming consistency.
+- Supports complex intersections with multiple connected roads.
 
-If the same road name appears at both ends (indicating a potential error), it rechecks intersecting road names and updates accordingly.
+---
 
-Leaves values unchanged if the segment is a dead-end, circle, or curved continuation with no valid intersections.
+## 🧰 Toolbox Overview
 
-## 📂 Input Parameters
-Parameter	Description:
+**Tool Name:** `Fix intersecting road name If Incorrect`  
+**Toolbox Name:** `Road Name Checking Toolbox`
 
-1. Input Road Feature Class -> Polyline shapefile or feature class representing split road segments.
+### 🔧 Parameters
 
-2. Road Name Field -> Field containing the road segment's name (e.g., "Name").
+| Parameter Name            | Description |
+|--------------------------|-------------|
+| `Input Road Feature Class` | The input polyline feature class representing roads. |
+| `Road Name Field`          | The field that stores the main road name (e.g., `FULLNAME`, `STREETNAME`). |
+| `Field for Start Road Name (Name_1)` | Field to be updated with road names at the **start** point of the road segment. |
+| `Field for End Road Name (Name_12)` | Field to be updated with road names at the **end** point of the road segment. |
 
-3. Start Road Name Field (Name_1) -> Field to store or validate intersecting road name at the start of the segment.
+---
 
-4. End Road Name Field (Name_12) ->	Field to store or validate intersecting road name at the end of the segment.
+## 🚀 How It Works
 
-## ✅ Rules Applied
-If Name_1 == Name_12 (== Name), the tool checks actual intersections.
+1. For each road feature:
+   - It checks the **start point** and **end point** of the geometry.
+   - It finds all other roads that **intersect** at that point.
+   - If the names of those intersecting roads differ from the current feature's name and `Name_1`/`Name_12`, the fields are updated.
+2. The tool ensures that if multiple intersecting road names are found, the names are sorted and concatenated.
 
-If no intersecting road names are found (e.g., at cul-de-sacs or road ends), Name_1 and Name_12 are set to the segment’s own Name.
+---
 
-If true intersections are found, the intersecting road names replace the existing Name_1 and Name_12 values.
 
-## 🚀 Getting Started
-Requirements
-ArcGIS Pro
-
-Python 3 (with ArcPy)
-
-Your roads dataset should be split at intersections.
-
-Usage
-Add the .pyt file to your ArcGIS project.
-
-Run the toolbox from the toolbox pane or script.
-
-Input the parameters and let the tool validate road segment names.
